@@ -33,7 +33,7 @@ else:
     raise NotImplementedError(f'{args.split} is not supported')
 
 # clip_id = len(glob.glob('labels/*.txt'))
-for seg_id in range(1, num_segs):
+for seg_id in range(0, num_segs):
     flag = os.system('gsutil cp ' + url_template % seg_id + ' ' + args.out_dir)
     assert flag == 0, 'Failed to download segment %d. Make sure gsutil is installed'%seg_id
     os.system('cd %s; tar xf %s_%04d.tar -C %s'%(args.out_dir, args.split, seg_id, tf_path))
