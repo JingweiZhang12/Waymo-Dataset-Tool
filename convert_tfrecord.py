@@ -23,13 +23,12 @@ def extract_frame(frames_path, outname, outdir_img, class_mapping, resize_ratio=
     cls_inds_all = {}
     track_ids_all = {}
     if not os.path.exists(outdir_img):
-        os.mkdir(outdir_img)
+        os.makedirs(outdir_img, exist_ok=True)
 
     for fidx, data in enumerate(dataset):
         frame = open_dataset.Frame()
         frame.ParseFromString(bytearray(data.numpy()))
-
-        (range_images, camera_projections, range_image_top_pose) = (
+        (range_images, camera_projections, seg_labels, range_image_top_pose) = (
             frame_utils.parse_range_image_and_camera_projection(frame))
 
         time = frame.context.stats.time_of_day
