@@ -11,7 +11,7 @@ import argparse
 from waymo_open_dataset.utils import frame_utils
 from waymo_open_dataset import dataset_pb2 as open_dataset
 
-tf.enable_eager_execution()
+tf.compat.v1.enable_eager_execution()
 WAYMO_CLASSES = ['TYPE_UNKNOWN', 'TYPE_VECHICLE', 'TYPE_PEDESTRIAN', 'TYPE_SIGN', 'TYPE_CYCLIST']
 
 def extract_frame(frames_path, outname, outdir_img, class_mapping, resize_ratio=1.0):

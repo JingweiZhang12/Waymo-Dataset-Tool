@@ -10,16 +10,20 @@ parser.add_argument('--out-dir', default='./tmp')
 parser.add_argument('--resize', default=0.5625, type=float)
 args = parser.parse_args()
 
-url_template = 'gs://waymo_open_dataset_v_1_2_0/{split}/{split}_%04d.tar'.format(split=args.split)
+url_template = 'gs://waymo_open_dataset_v_1_4_0/archived_files/{split}/{split}_%04d.tar'.format(split=args.split)
 if args.split == 'training':
     num_segs = 32
 elif args.split == 'validation':
+    num_segs = 8
+elif args.split == 'testing':
     num_segs = 8
 
 if not os.path.exists(args.out_dir):
     os.mkdir(args.out_dir)
 
 clip_id = len(glob.glob('labels/*.txt'))
+# import sys
+# sys.path.insert(0, '/mnt/lustre/zhangjingwei/google-cloud-sdk/bin/')
 for seg_id in range(0, num_segs):
     flag = os.system('gsutil cp ' + url_template % seg_id + ' ' + args.out_dir)
     assert flag == 0, 'Failed to download segment %d. Make sure gsutil is installed'%seg_id
