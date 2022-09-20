@@ -1,6 +1,7 @@
 from __future__ import print_function
 import glob
 import os
+import re
 import os.path as osp
 import argparse
 from convert_tfrecord import extract_frame, WAYMO_CLASSES
@@ -32,8 +33,15 @@ elif args.split == 'testing':
 else:
     raise NotImplementedError(f'{args.split} is not supported')
 
+begin_seg_id = 0
+inter_file =  glob.glob(osp.join(args.out_dir, f'{args.split}_*.tar_.gstmp'))
+if len(inter_file)>0:
+    inter_file = sorted(inter_file)[0]
+    begin_seg_id = re.findall('\d{4}', osp.basename(inter_file))
+    begin_seg_id = int(begin_seg_id[0])
+
 # clip_id = len(glob.glob('labels/*.txt'))
-for seg_id in range(0, num_segs):
+for seg_id in range(begin_seg_id, num_segs):
     flag = os.system('gsutil cp ' + url_template % seg_id + ' ' + args.out_dir)
     assert flag == 0, 'Failed to download segment %d. Make sure gsutil is installed'%seg_id
     os.system('cd %s; tar xf %s_%04d.tar -C %s'%(args.out_dir, args.split, seg_id, tf_path))
